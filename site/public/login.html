@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3185/3185082.png">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>Login</title>
+    <script src="./js/funcoes.js"></script>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <a class="select-disable" href="./index.html"><img src="assets/img/icones/seta-esquerda.png"></a>
+            <div class="form">
+                <h1 class="texto_login select-disable">Entre em sua conta!</h1>
+                <div class="input-container">
+                    <div>
+                        <p class="select-disable">E-mail</p>
+                        <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="E-mail"
+                            id="email_input" onkeyup="validar_email()">
+                        <span id="span_validar_email"></span>
+                    </div>
+                    <div>
+                        <p class="select-disable">Senha</p>
+                        <input data-aos="fade-up" data-aos-duration="700" type="password" placeholder="***********"
+                            id="senha_input" onkeyup="validar_senha()">
+                        <span id="span_senha_validacao"></span>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <span class="conta">Ainda não tem uma conta? <a href="cadastro.html">Clique Aqui</a></span>
+                    <button class="botao select-disable" onclick="entrar()">Login</button>
+                </div>
+            </div>
+        </div>
+        <div class="login-right">
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+
+<script>
+    function validar_email() {
+        var input = document.getElementById('email_input')
+        var email = email_input.value
+        var span = document.getElementById('span_validar_email')
+
+        if (email.indexOf("@") == -1 || email.indexOf(".com") == -1 || email.length < 7) {
+            span.style.color = 'red'
+            span.innerHTML = 'O e-mail cadastrado é inválido. Por favor, insira um e-mail válido.'
+            span.style.marginTop = '-20px'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '11px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_senha() {
+        var input = document.getElementById('senha_input')
+        var senha = senha_input.value
+        var span = document.getElementById('span_senha_validacao')
+
+        if (senha.length < 8) {
+            span.style.color = 'red'
+            span.innerHTML = 'A senha inserida é muito curta. Por favor, insira uma senha com pelo menos 8 caracteres'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            span.style.marginTop = '-20px'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function entrar() {
+        //aguardar();
+
+        var emailVar = email_input.value;
+        var senhaVar = senha_input.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            // cardErro.style.display = "block"
+            swal("Ops", "Preencha os campos para logar!", "error")
+            finalizarAguardar();
+            return false;
+        }
+        else {
+            setInterval('...', 5000)
+        }
+
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
+
+        fetch("/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!")
+
+            if (resposta.ok) {
+                console.log("Os dados é " + resposta);
+
+                resposta.json().then(json => {
+                    console.log(json);
+                    console.log(JSON.stringify(json));
+
+                    sessionStorage.EMAIL_USUARIO = json.email;
+                    sessionStorage.NOME_USUARIO = json.nome;
+                    sessionStorage.ID_USUARIO = json.id;
+                    sessionStorage.ID_ENDERECO = json.idendereco
+                    sessionStorage.TIPO_CLIENTE = json.tipo_cliente
+
+                    setTimeout(function () {
+                        window.location = "./dashboard/dashboard-geral.html";
+                    }, 1000);
+
+                });
+
+            } else {
+
+                swal("Ops", "Email e/ou senha inválido(s)", "error")
+
+                resposta.text().then(texto => {
+                    console.error(texto);
+                    finalizarAguardar(texto);
+                });
+            }
+
+        }).catch(function (erro) {
+            console.log(erro);
+        })
+
+        return false;
+    }
+</script>

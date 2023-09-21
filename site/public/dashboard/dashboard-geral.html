@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3185/3185082.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/dashboard-geral.css">
+    <title>Dashboard Geral - Cocoa</title>
+</head>
+
+<body
+    onload="obterDadosGrafico(),obterTemperaturaAtual() , obterquantidadeusuario(),obterquantidadeplantacoes() , obterstatusplantacoes()">
+    <div id="dashboard-container">
+        <nav class="select-disable" id="nav">
+            <img src="../assets/img/logotipo/branco.png" alt="Logo Cocoa Technology">
+            <div class="texto-user">
+                <span>Bem-vindo</span>
+                <span id="b_usuario"></span>
+            </div>
+            <ul class="nav-list">
+                <li class="pag-atual"><a href="./dashboard-geral.html">
+                        <img class="icon-nav" src="../assets/img/icones/global.png" alt="Geral">
+                        <span>Geral</span></a>
+                </li>
+                <li>
+                    <a href="./dashboard-especifica.html">
+                        <img class="icon-nav" src="../assets/img/icones/thermometer-white.png" alt="Temperatura">
+                        <span>Específico</span>
+                    </a>
+                </li>
+                <li><a href="./cadastrar-usuario.html">
+                        <img class="icon-nav" src="../assets/img/icones/user.png" alt="Temperatura">
+                        <span>Cadastrar Usuário</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./cadastro-plantacao.html">
+                        <img class="icon-nav" src="../assets/img/icones/folha.png" alt="Temperatura">
+                        <span>Cadastrar Plantações</span>
+                    </a>
+                </li>
+            </ul>
+            <a href="../login.html"><button>SAIR</button></a>
+        </nav>
+        <div id="content">
+            <div class="first-div-container">
+                <div style="position: relative;" class="chart-container-grande">
+                    <img class="info-img select-disable" src="../assets/img/icones/Info.png" alt="info" id="info_img"
+                        onclick="openModal()">
+                    <h2>Temperatura e umidade das plantações (agora)</h2>
+                    <div class="div-chart-grande">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                </div>
+                <div class="div-info-row">
+                    <div class="info-row">
+                        <div>
+                            <span id="numero_de_plantacoes">0</span>
+                            <h4>Plantações Cadastradas</h4>
+                        </div>
+                        <img src="../assets/img/icones/folha.png" alt="Folha">
+                    </div>
+                    <div class="info-row">
+                        <div><span id="numero_de_alertas">0</span>
+                            <h4>Plantações em alerta</h4>
+                        </div>
+                        <img src="../assets/img/icones/danger-alt.png" alt="Atenção">
+                    </div>
+                    <div class="info-row">
+                        <div>
+                            <span id="numero_de_usuarios">0</span>
+                            <h4>Usuários Cadastrados</h4>
+                        </div>
+                        <img src="../assets/img/icones/user.png" alt="Usuário">
+                    </div>
+                </div>
+            </div>
+            <div class="second-div-container">
+                <div class="chart-container-medium">
+                    <h2>Status das plantações cadastradas</h2>
+                    <div class="div-chart-medium">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container-medium">
+                    <h2>Temperatura atual da plantações</h2>
+                    <div class="div-chart-medium">
+                        <canvas id="myChart3"></canvas>
+                    </div>
+                </div>
+                <div class="alert-div">
+                    <input type="text" placeholder="Pesquisar">
+                    <div class="alert-row" id="alert_container">
+                        <!-- <div class="bloco" id="bloco1"><img src="../assets/img/icones/danger.png"
+                                alt="Perigo"><span>Serra das
+                                araras</span>
+                        </div>
+                        <div class="bloco"><img src="../assets/img/icones/orange-alert.png" alt="Cuidado"><span>Rua
+                                Augusta</span>
+                        </div>
+                        <div class="bloco"><img src="../assets/img/icones/warning.png"
+                                alt="Atenção"><span>Tingoassuiba</span></div>
+                        <div class="bloco"><img src="../assets/img/icones/fine.png" alt="Ok"><span>Haddock Lobo</span>
+                        </div>
+                        <div class="bloco"><img src="../assets/img/icones/fine.png" alt="Ok"><span>Domingos lobos</span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="modal">
+            <div class="box-modal">
+                <img src="../assets/img/icones/XCircle.png" alt="botão de fechar modal" onclick="closeModal()">
+                <h2>SISTEMAS DE ALERTA!</h2>
+                <p>Para uma melhor visualização do que está ocorrendo com sua plantação, a plantação terá quatro
+                    indicadores de estado, sendo eles respectivamente: <text class="green">Tranquilo,</text><text
+                        class="yellow"> Atenção,</text><text class="orange"> Cuidado,</text><text class="red">
+                        Perigo.</text>
+                </p>
+                <div class="state-box">
+                    <h3>Temperatura:</h3>
+                    <div class="states">
+                        <div style="background-color: #FF5555;">
+                            < 17°C</div>
+                                <div style="background-color: #e68a01;"> >= 17°C <br>a<br> < 20°C</div>
+                                <div style="background-color: #74C365;"> >= 20°C <br>a<br> <= 24°C</div>
+                                <div style="background-color: #ecbf0d;"> > 24°C <br>a<br> <= 26°C</div>
+                                <div style="background-color: #e68a01;"> > 26°C <br>a<br> < 29°C</div>
+                                <div style="background-color: #FF5555;">29°C < </div>
+                                </div>
+                                <div class="state-box">
+                                    <h3>Umidade:</h3>
+                                    <div class="states">
+                                        <div style="background-color: #FF5555;">
+                                            < 75%</div>
+                                                <div style="background-color: #74C365;"> > 75% <br>a<br> < 85%</div>
+                                                <div style="background-color: #FF5555;"> 85% < </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script
+                                    type="text/javascript">var $zoho = $zoho || {}; $zoho.salesiq = $zoho.salesiq || { widgetcode: "ba8e3b9f72f9d967ced760ef8825597bd6b90724b968693c3a315187b52e89df2ea958997ca1cc1300b0af5632367fc7", values: {}, ready: function () { } }; var d = document; s = d.createElement("script"); s.type = "text/javascript"; s.id = "zsiqscript"; s.defer = true; s.src = "https://salesiq.zoho.com/widget"; t = d.getElementsByTagName("script")[0]; t.parentNode.insertBefore(s, t); d.write("<div id='zsiqwidget'></div>");</script>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+
+<script>
+
+    const tooltipArray = [];
+
+    const imgInfo = document.getElementById('info_img');
+    setInterval(function () {
+        imgInfo.classList.toggle('paused');
+    }, 2000);
+
+    const modal = document.getElementById(`modal`);
+    function openModal() {
+        modal.style.display = 'flex';
+        setTimeout(() => { modal.classList.toggle(`show`) }, 401);
+    }
+    function closeModal() {
+        modal.classList.toggle(`show`)
+        setTimeout(() => { modal.style.display = 'none'; }, 401);
+    }
+
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+    let proximaAtualizacao;
+
+    window.onload = obterDadosGraficos();
+
+    function obterDadosGraficos() {
+        obterDadosGrafico(),
+            obterTemperaturaAtual(),
+            obterstatusplantacoes(sessionStorage.ID_USUARIO),
+
+            fetch(`/medidas/obterquantidadeusuario/${sessionStorage.ID_USUARIO}`, {
+                method: "get"
+            }).then(function (resposta) {
+                if (resposta.ok) {
+                    resposta.json().then((jsonQtdUser) => {
+                        console.log(jsonQtdUser)
+                        numero_de_usuarios.innerHTML = `${jsonQtdUser[0].qtdUsu}`
+                    })
+                }
+            }),
+
+            fetch(`/medidas/obterquantidadeplantacoes/${sessionStorage.ID_USUARIO}`, {
+                method: "get"
+            }).then(function (resposta) {
+                if (resposta.ok) {
+                    resposta.json().then((jsonQtdPlantacao) => {
+                        console.log(jsonQtdPlantacao)
+                        numero_de_plantacoes.innerHTML = `${jsonQtdPlantacao[0].qtdPlantacao}`
+                    })
+                }
+            }),
+
+            fetch(`/medidas/obterplantacoesemalerta/${sessionStorage.ID_USUARIO}`, {
+                method: "get"
+            }).then(function (resposta) {
+                if (resposta.ok) {
+                    resposta.json().then((jsonQtdPlantacaoAlerta) => {
+                        console.log(jsonQtdPlantacaoAlerta)
+                        numero_de_alertas.innerHTML = `${jsonQtdPlantacaoAlerta[0].alerta}`
+                    })
+                }
+            });
+
+        fetch(`/medidas/plantaOrderStatus/${sessionStorage.ID_USUARIO}`, {
+            method: "get"
+        }).then(function (resposta) {
+            if (resposta.ok) {
+                resposta.json().then((jsonTabela) => {
+                    jsonTabela.forEach(linha => {
+                        console.log(linha)
+                        if ((linha.temperatura > 29 || linha.temperatura < 17) || (linha.umidade > 85 || linha.umidade < 75)) {
+                            alert_container.innerHTML += `
+                            <div class="bloco" id="bloco${linha.idplantacao}"><img src="../assets/img/icones/danger.png"
+                                alt="Perigo"><span>${linha.nome}</span>
+                            </div>
+                            `
+
+                            const blocoTip = `#bloco${linha.idplantacao}`;
+                            const tooltipContent = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; font-size: 12px; gap: 10px;"> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"> <p>Temperatura Atual: <span style="color: #FF5555">${linha.temperatura}°C</span></p> <p>Temperatura ideal: <span style="color: #74C365">22°C</span></p></div> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"><p>Umidade Atual: <span style="color: #FF5555">${linha.umidade}%</span></p> <p>Umidade ideal: <span style="color: #74C365">80%</span></p></div></div>`
+
+                            tooltipArray.push({ target: blocoTip, content: tooltipContent })
+                        } else if (((linha.temperatura > 26 && linha.temperatura < 29) || (linha.temperatura >= 17 && linha.temperatura < 20)) && (linha.umidade <= 85 && linha.umidade >= 75)) {
+                            alert_container.innerHTML += `
+                            <div class="bloco" id="bloco${linha.idplantacao}"><img src="../assets/img/icones/orange-alert.png" alt="Cuidado"><span>${linha.nome}</span>
+                            </div>
+                            `
+
+                            const blocoTip = `#bloco${linha.idplantacao}`;
+                            const tooltipContent = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; font-size: 12px; gap: 10px;"> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"> <p>Temperatura Atual: <span style="color: #FF9900">${linha.temperatura}°C</span></p> <p>Temperatura ideal: <span style="color: #74C365">22°C</span></p></div> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"><p>Umidade Atual: <span style="color: #74C365">${linha.umidade}%</span></p> <p>Umidade ideal: <span style="color: #74C365">80%</span></p></div></div>`
+
+                            tooltipArray.push({ target: blocoTip, content: tooltipContent })
+                        } else if ((linha.temperatura > 24 && linha.temperatura <= 26) && (linha.umidade <= 85 && linha.umidade >= 75)) {
+                            alert_container.innerHTML += `
+                            <div class="bloco" id="bloco${linha.idplantacao}"><img src="../assets/img/icones/warning.png" alt="Atenção"><span>${linha.nome}</span>
+                            </div>
+                            `
+                            const blocoTip = `#bloco${linha.idplantacao}`;
+                            const tooltipContent = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; font-size: 12px; gap: 10px;"> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"> <p>Temperatura Atual: <span style="color: #FFCC00">${linha.temperatura}°C</span></p> <p>Temperatura ideal: <span style="color: #74C365">22°C</span></p></div> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"><p>Umidade Atual: <span style="color: #74C365">${linha.umidade}%</span></p> <p>Umidade ideal: <span style="color: #74C365">80%</span></p></div></div>`
+
+                            tooltipArray.push({ target: blocoTip, content: tooltipContent })
+                        } else {
+                            alert_container.innerHTML += `
+                            <div class="bloco" id="bloco${linha.idplantacao}"><img src="../assets/img/icones/fine.png" alt="ok"><span>${linha.nome}</span>
+                            </div>
+                            `
+                            const blocoTip = `#bloco${linha.idplantacao}`;
+                            const tooltipContent = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 300px; font-size: 12px; gap: 10px;"> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"> <p>Temperatura Atual: <span style="color: #74C365">${linha.temperatura}°C</span></p> <p>Temperatura ideal: <span style="color: #74C365">22°C</span></p></div> <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; width: 100%;"><p>Umidade Atual: <span style="color: #74C365">${linha.umidade}%</span></p> <p>Umidade ideal: <span style="color: #74C365">80%</span></p></div></div>`
+
+                            tooltipArray.push({ target: blocoTip, content: tooltipContent })
+                        }
+                    });
+                }).then(() => {
+                    tooltipArray.forEach((tooltip) => {
+                        const balao = document.querySelector(tooltip.target);
+                        tippy(balao, {
+                            content: tooltip.content,
+                            placement: 'top',
+                            arrow: true,
+                            animation: 'fade',
+                            interactive: true,
+                            allowHTML: true,
+                        });
+                    });
+                })
+            }
+        });
+    }
+
+    function obterDadosGrafico(idCliente) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        fetch(`/medidas/ultimosDadosPlantacao/${sessionStorage.ID_USUARIO}`, {
+            cache: 'no-store'
+        }, {
+            method: "get"
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    plotarGrafico(resposta, idCliente);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+    function plotarGrafico(resposta, idCliente) {
+        console.log('iniciando plotagem do gráfico...');
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [];
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: 'Temperatura constante captura das plantações',
+                data: [],
+                backgroundColor: [],
+                borderColor: [],
+                fill: false,
+                tension: 0.1
+            },
+            {
+                label: 'Umidade constante captura das plantações',
+                data: [],
+                fill: false,
+                backgroundColor: [],
+                borderColor: [],
+                tension: 0.1
+            }]
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            labels.push(registro.nome);
+            dados.datasets[0].data.push(registro.temperatura);
+            dados.datasets[1].data.push(registro.umidade);
+
+            if (registro.temperatura > 29 || registro.temperatura < 17) {
+                dados.datasets[0].backgroundColor.push("#FF5555");
+                dados.datasets[0].borderColor.push("#FF5555");
+            } else if ((registro.temperatura > 26 && registro.temperatura < 29) || (registro.temperatura >= 17 && registro.temperatura < 20)) {
+                dados.datasets[0].backgroundColor.push("#FF9900");
+                dados.datasets[0].borderColor.push("#FF9900");
+            } else if (registro.temperatura > 24 && registro.temperatura <= 26) {
+                dados.datasets[0].backgroundColor.push("#FFCC00");
+                dados.datasets[0].borderColor.push("#FFCC00");
+            } else {
+                dados.datasets[0].backgroundColor.push("#74C365");
+                dados.datasets[0].borderColor.push("#74C365");
+            }
+
+            if (registro.umidade > 85 || registro.umidade < 75) {
+                dados.datasets[1].backgroundColor.push("#FF5555");
+                dados.datasets[1].borderColor.push("#FF5555");
+            } else {
+                dados.datasets[1].backgroundColor.push("#74C365");
+                dados.datasets[1].borderColor.push("#74C365");
+            }
+
+            console.log(registro)
+
+        }
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'bar',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`myChart1`),
+            config
+        );
+    }
+
+    function obterTemperaturaAtual(idCliente) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+
+        fetch(`/medidas/ultimosDadosPlantacao/${sessionStorage.ID_USUARIO}`, {
+            cache: 'no-store'
+        }, {
+            method: "get"
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta_temperatura) {
+                    console.log(`Dados recebidos para as temperaturas contantes: ${JSON.stringify(resposta_temperatura)}`);
+                    plotarGrafico2(resposta_temperatura, idCliente);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+    function plotarGrafico2(resposta_temperatura, idCliente) {
+        console.log('iniciando plotagem do gráfico...');
+
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [];
+
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: 'Temperatura',
+                data: [],
+                backgroundColor: [],
+                borderColor: [],
+                borderWidth: 1,
+                fill: false,
+
+                tension: 0.1
+            }]
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta_temperatura)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta_temperatura.length; i++) {
+            var registro = resposta_temperatura[i];
+            labels.push(registro.nome);
+            dados.datasets[0].data.push(registro.temperatura);
+
+            console.log(registro)
+
+            if (registro.temperatura > 29 || registro.temperatura < 17) {
+                dados.datasets[0].backgroundColor.push("#FF5555");
+            } else if ((registro.temperatura >= 27 && registro.temperatura <= 28) || (registro.temperatura >= 17 && registro.temperatura < 20)) {
+                dados.datasets[0].backgroundColor.push("#FF9900");
+            } else if (registro.temperatura > 24 && registro.temperatura <= 26) {
+                dados.datasets[0].backgroundColor.push("#FFCC00");
+            } else {
+                dados.datasets[0].backgroundColor.push("#74C365");
+            }
+        }
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'line',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`myChart3`),
+            config
+        );
+    }
+
+    function obterstatusplantacoes(idCliente) {
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+        fetch(`/medidas/status_plantacoes/${sessionStorage.ID_USUARIO}`, {
+            cache: 'no-store',
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (retorno) {
+                    console.log(`Dados recebidos para as temperaturas contantes: ${JSON.stringify(retorno)}`);
+                    plotarGrafico3(retorno, idCliente);
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        }).catch(function (error) {
+            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+        });
+    }
+
+    function plotarGrafico3(retorno, idCliente) {
+        console.log('iniciando plotagem do gráfico...');
+        var statusArray = [];
+
+        let dados = {
+            labels: ['Tranquilo', 'Cuidado', 'Atenção', 'Perigo'],
+            datasets: [{
+                label: ['Quantidade de plantações'],
+                data: [],
+                backgroundColor: ['#74C365', '#FFCC00', '#FF9900', '#FF5555'],
+                borderColor: ['#74C365', '#FFCC00', '#FF9900', '#FF5555'],
+                fill: false,
+
+                tension: 0.1
+            }]
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(retorno)
+
+        statusArray.push(retorno[0].tranquilo);
+        statusArray.push(retorno[0].atencao);
+        statusArray.push(retorno[0].cuidado);
+        statusArray.push(retorno[0].perigo);
+        console.log(retorno[0])
+
+        for (let j = 0; j < statusArray.length; j++) {
+            dados.datasets[0].data.push(statusArray[j]);
+        }
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'doughnut',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`myChart2`),
+            config
+        );
+    }
+</script>

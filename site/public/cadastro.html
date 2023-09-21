@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3185/3185082.png">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/cadastro.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+
+<body>
+    <div class="cadastro-container">
+        <div class="cadastro-left">
+        </div>
+        <div class="cadastro-right">
+            <a class="select-disable" href="index.html"><img src="assets/img/icones/seta-esquerda.png"></a>
+            <h1 class="texto_cadastro select-disable">Faça seu cadastro</h1>
+
+            <div class="form" id="cadastro_incial">
+                <div class="form-esquerda">
+                    <p class="select-disable">Nome completo</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira seu Nome"
+                        id="input_nome" onkeyup="validar_nome()" required>
+                    <span id="span_nome_validacao"></span>
+                    <p class="select-disable">Senha</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="password" placeholder="***********"
+                        id="input_senha" onkeyup="validar_senha()" required>
+                    <span id="span_senha_validacao"></span>
+                    <p class="select-disable">Confirme a senha</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="password" placeholder="***********"
+                        id="confirmacao_senha_input" onkeyup="confirmar_senha()" required>
+                    <span id="span_confirma_senha_validacao"></span>
+                </div>
+                <div class="form-direita">
+                    <p class="select-disable">E-mail</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="E-mail" id="input_email"
+                        onkeyup="validar_email()" required>
+                    <span id="span_validar_email"></span>
+                    <p class="select-disable">CPF</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="number" placeholder="Insira seu Cpf"
+                        id="input_cpf" onkeyup="validar_cpf()" required>
+                    <span id="span_validar_cpf"></span>
+                    <p class="select-disable">CNPJ</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="number" placeholder="Insira seu CNPJ"
+                        id="input_cnpj" onkeyup="validar_cpnj()" required>
+                    <span id="span_validar_cnpj"></span>
+                </div>
+            </div>
+            <div class="form" style="display: none;" id="cadastro_final">
+                <div class="form-esquerda">
+                    <p class="select-disable">CEP</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="number" placeholder="Insira seu cep"
+                        id="input_cep_usuario" onkeyup="carregar_cep()" required>
+                    <span id="span_validar_cep_usuario"></span>
+                    <p class="select-disable">Estado</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira seu estado"
+                        id="input_estado" onkeyup="validar_estado()" required>
+                    <span id="span_validar_estado"></span>
+                    <p class="select-disable">Cidade</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira sua cidade"
+                        id="input_cidade" onkeyup="validar_cidade()" required>
+                    <span id="span_validar_cidade"></span>
+
+                </div>
+                <div class="form-direita">
+                    <p class="select-disable">Bairro</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira seu bairro"
+                        id="input_bairro" onkeyup="validar_bairro()" required>
+                    <span id="span_validar_bairro"></span>
+                    <p class="select-disable">Número</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira seu número"
+                        id="input_numero" onkeyup="validar_numero()" required>
+                    <span id="span_validar_numero"></span>
+                    <p class="select-disable">Complemento</p>
+                    <input data-aos="fade-up" data-aos-duration="700" type="text" placeholder="Insira seu complemento"
+                        id="input_complemento" onkeyup="validar_complemento()" required>
+                    <span id="span_validar_complemento"></span>
+                </div>
+            </div>
+            <div class="form-centro">
+                <span class="conta">Já tem uma conta? <a href="login.html">Clique Aqui</a> para logar!</span>
+                <button class="botao" onclick="Prosseguir()" id="btn">Prosseguir</button>
+                <div id="cadastro" style="display: none;">
+                    <button class="botao" onclick="cadastar()" id="btn">Cadastrar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="./js/funcoes.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+
+<script>
+
+
+    function validar_nome() {
+        var input = document.getElementById('input_nome')
+        var nome = input_nome.value
+        var span = document.getElementById('span_nome_validacao')
+
+        if (nome == "") {
+            span.style.color = 'red'
+            span.innerHTML = 'Campo vazio'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '12px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+        }
+        else if (nome.length < 3) {
+            span.style.color = 'red'
+            span.innerHTML = 'O nome inserido é muito curto. Por favor,<br> insira um nome com pelo menos 3 caracteres'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '12px'
+            input.style.borderColor = 'red'
+            span.style.marginTop = '-10px'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_senha() {
+        var input = document.getElementById('input_senha')
+        var senha = input_senha.value
+        var span = document.getElementById('span_senha_validacao')
+
+        if (senha.length < 8) {
+            span.style.color = 'red'
+            span.innerHTML = 'A senha inserida é muito curta. Por favor, <br> insira uma senha com pelo menos 8 caracteres'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '12px'
+            input.style.borderColor = 'red'
+            span.style.marginTop = '-10px'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function confirmar_senha() {
+        var input = document.getElementById('confirmacao_senha_input')
+        var senha = input_senha.value
+        var confirmar_senha_user = confirmacao_senha_input.value
+        var span = document.getElementById('span_confirma_senha_validacao')
+
+        if (confirmar_senha_user != senha) {
+            span.style.color = 'red'
+            span.innerHTML = 'Ops! A senha inserida está incorreta. Por favor, tente novamente.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            span.style.marginTop = '-15px'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_email() {
+        var input = document.getElementById('input_email')
+        var email = input_email.value
+        var span = document.getElementById('span_validar_email')
+        email = email.toLowerCase()
+
+        if (email.indexOf("@") == -1 || email.indexOf(".com") == -1 || email.length < 7) {
+            span.style.color = 'red'
+            span.innerHTML = 'O e-mail cadastrado é inválido. Por favor, insira um e-mail válido.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_cpf() {
+        var input = document.getElementById('input_cpf')
+        var cep = input_cpf.value
+        var span = document.getElementById('span_validar_cpf')
+
+
+        if (cep.length < 11 || cep.length > 11) {
+            span.style.color = 'red'
+            span.innerHTML = 'O CPF inserido é inválido. Por favor, insira um CEP válido.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '0px'
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+
+    function validar_cpnj() {
+        var input = document.getElementById('input_cnpj')
+        var cnpj = input_cnpj.value
+        var span = document.getElementById('span_validar_cnpj')
+
+        if (cnpj.length < 14 || cnpj.length > 14) {
+            span.style.color = 'red'
+            span.innerHTML = 'O CNPJ inserido é inválido. Por favor, insira um CNPJ válido.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '-20px'
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+
+    function Prosseguir() {
+        var cadastrao_inicial = document.getElementById('cadastro_incial')
+        var cadastro_final = document.getElementById('cadastro_final')
+        var botao = document.getElementById('btn')
+
+
+
+        var nomeVar = input_nome.value;
+        var emailVar = input_email.value;
+        var senhaVar = input_senha.value;
+        var confirmacaoSenhaVar = confirmacao_senha_input.value;
+        var cpfVar = input_cpf.value;
+        var cnpjVar = input_cnpj.value;
+        var cepVar = input_cep_usuario.value
+        var estadoVar = input_estado.value
+        var cidadeVar = input_cidade.value
+        var bairroVar = input_bairro.value
+        var numeroVar = input_numero.value
+        var complementoVar = input_complemento.value
+        var div_cadastro = document.getElementById('cadastro')
+
+        nomeVar = nomeVar.toLowerCase()
+        emailVar = emailVar.toLowerCase()
+
+        if (nomeVar == "" || emailVar == "" || senhaVar == "" || cpfVar == "" || cnpjVar == "") {
+            //cardErro.style.display = "block"
+            swal("Ops", "Preencha todos os campos", "error")
+
+            finalizarAguardar();
+            return false;
+        }
+        else if (nomeVar.length < 3) {
+            swal("Ops", "O nome inserido é muito curto. Por favor, insira um nome com pelo menos 3 caracteres", "warning")
+        }
+        else if (emailVar.indexOf("@") == -1 || emailVar.indexOf(".com") == -1 || emailVar.length < 7) {
+            swal("Ops", "O e-mail cadastrado é inválido. Por favor, insira um e-mail válido.", "warning")
+        }
+        else if (senhaVar.length < 8) {
+            swal("Ops", "A senha inserida é muito curta. Por favor,insira uma senha com pelo menos 8 caracteres.", "warning")
+        }
+        else if (cpfVar.length < 11 || cpfVar.length > 11) {
+            swal("Ops", "O CPF inserido é inválido. Por favor, insira um CEP válido.", "warning")
+        }
+        else if (cnpjVar.length < 14 || cnpjVar.length > 14) {
+            swal("Ops", "O CNPJ inserido é inválido. Por favor, insira um CNPJ válido.", "warning")
+        }
+        else {
+
+
+            cadastrao_inicial.style.display = 'none'
+            cadastro_final.style.display = 'flex'
+            botao.style.display = 'none'
+            div_cadastro.style.display = 'flex'
+
+
+            // Enviando o valor da nova input
+
+
+
+        }
+
+    }
+    function carregar_cep() {
+        var cep = input_cep_usuario.value
+        var estado = input_estado.value
+        var cidade = input_cidade.value
+        var bairro = input_bairro.value
+        var numero = Number(input_numero.value)
+        var complemento = input_complemento.value
+        var input = document.getElementById('input_cep_usuario')
+        var span = document.getElementById('span_validar_cep_usuario')
+
+
+        if (cep.length < 8 || cep.length > 8) {
+            span.style.color = 'red'
+            span.innerHTML = 'O CEP inserido é inválido. Por favor, insira um CEP válido.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '-20px'
+
+        }
+
+        else if (cep.length == 8) {
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+
+
+                        input_bairro.value = '';
+                        input_cidade.value = '';
+                        input_estado.value = '';
+                        span.style.color = 'red'
+                        span.innerHTML = 'O CEP inserido é inválido. Por favor, insira um CEP válido.'
+                        span.style.fontFamily = 'Mulish'
+                        span.style.fontSize = '10px'
+                        input.style.borderColor = 'red'
+                        input.classList.add("shake");
+                        span.style.marginTop = '-20px'
+                    } else {
+
+
+                        input_bairro.value = data.bairro
+                        input_cidade.value = data.localidade
+                        input_estado.value = data.uf
+                        input_complemento.value = data.complemento
+                        span.innerHTML = ''
+                        span.style.fontFamily = 'Mulish'
+                        span.style.fontSize = '15px'
+                        input.style.borderColor = 'green'
+                        input.classList.remove("shake");
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+
+    }
+
+    function validar_estado() {
+        var estado = input_estado.value
+        var input = document.getElementById('input_estado')
+        var span = document.getElementById('span_validar_estado')
+
+        if (estado.length < 2) {
+            span.style.color = 'red'
+            span.innerHTML = 'O Estado inserido é inválido. Por favor, insira um estado válido.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '-20px'
+
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+
+    function validar_cidade() {
+        var cidade = input_cidade.value
+        var input = document.getElementById('input_cidade')
+        var span = document.getElementById('span_validar_cidade')
+
+        if (cidade.length < 5) {
+            span.style.color = 'red'
+            span.innerHTML = 'A Cidade inserida é inválida. Por favor, insira um cidade válida.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '-20px'
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_bairro() {
+        var bairro = input_bairro.value
+        var input = document.getElementById('input_bairro')
+        var span = document.getElementById('span_validar_bairro')
+
+
+        if (bairro.length < 5) {
+            span.style.color = 'red'
+            span.innerHTML = 'O bairo inserido é muito curto.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '0px'
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function validar_numero() {
+        var numero = input_numero.value
+        var input = document.getElementById('input_numero')
+        var span = document.getElementById('span_validar_numero')
+
+
+        if (numero.length < 2) {
+            span.style.color = 'red'
+            span.innerHTML = 'Número muito curto, Por favor, Revise.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '0px'
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+
+    }
+
+    function validar_complemento() {
+        var complemento = input_complemento.value
+        var input = document.getElementById('input_complemento')
+        var span = document.getElementById('span_validar_complemento')
+
+        if (complemento.length < 3) {
+            span.style.color = 'red'
+            span.innerHTML = 'Complemento inválido, por favor, revise.'
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '10px'
+            input.style.borderColor = 'red'
+            input.classList.add("shake");
+            span.style.marginTop = '0px'
+
+        }
+        else {
+            span.innerHTML = ''
+            span.style.fontFamily = 'Mulish'
+            span.style.fontSize = '15px'
+            input.style.borderColor = 'green'
+            input.classList.remove("shake");
+        }
+    }
+    function cadastar() {
+
+        var nomeVar = input_nome.value;
+        var emailVar = input_email.value;
+        var senhaVar = input_senha.value;
+        var confirmacaoSenhaVar = confirmacao_senha_input.value;
+        var cpfVar = input_cpf.value;
+        var cnpjVar = input_cnpj.value;
+        var cepVar = input_cep_usuario.value
+        var estadoVar = input_estado.value
+        var cidadeVar = input_cidade.value
+        var bairroVar = input_bairro.value
+        var numeroVar = input_numero.value
+        var complementoVar = input_complemento.value
+
+
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                nomeServer: nomeVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar,
+                cpfServer: cpfVar,
+                cnpjServer: cnpjVar,
+                cepServer: cepVar,
+                estadoServer: estadoVar,
+                cidadeServer: cidadeVar,
+                bairroServer: bairroVar,
+                numeroServer: numeroVar,
+                complementoServer: complementoVar
+
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                //cardErro.style.display = "block";
+                swal("Bom trabalho!", "Cadastro realizado com sucesso redirecionando a tela de login...!", "success");
+
+                setTimeout(() => {
+                    window.location = "login.html";
+                }, "2000")
+
+
+                limparFormulario();
+                finalizarAguardar();
+            } else {
+                swal("Ops", "Houve um erro ao fazer o cadastro", "error")
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            finalizarAguardar();
+        });
+
+        return false;
+
+
+
+    }
+
+    //function sumirMensagem() {
+        //cardErro.style.display = "none"
+    //}
+
+</script>

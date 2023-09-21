@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3185/3185082.png" type="image/x-icon">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/cadastro-users.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Cadastro de Usuário - Cocoa</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body onload="atualizarFeed() , listarInfosDeUm()">
+    <div id="dashboard-container">
+        <nav class="select-disable" id="nav">
+            <img src="../assets/img/logotipo/branco.png" alt="Logo Cocoa Technology">
+            <div class="texto-user">
+                <span>Bem-vindo</span>
+                <span id="b_usuario"></span>
+            </div>
+            <ul class="nav-list">
+                <li><a href="./dashboard-geral.html">
+                        <img class="icon-nav" src="../assets/img/icones/global.png" alt="Geral">
+                        <span>Geral</span></a>
+                </li>
+                <li>
+                    <a href="./dashboard-especifica.html">
+                        <img class="icon-nav" src="../assets/img/icones/thermometer-white.png" alt="Temperatura">
+                        <span>Específico</span>
+                    </a>
+                </li>
+                <li class="pag-atual"><a href="./cadastrar-usuario.html">
+                        <img class="icon-nav" src="../assets/img/icones/user.png" alt="Temperatura">
+                        <span>Cadastrar Usuário</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./cadastro-plantacao.html">
+                        <img class="icon-nav" src="../assets/img/icones/folha.png" alt="Temperatura">
+                        <span>Cadastrar Plantações</span>
+                    </a>
+                </li>
+            </ul>
+            <a href="../login.html"><button>SAIR</button></a>
+        </nav>
+        <div id="content">
+            <section class="first-div-container" style="gap: 9vh;">
+                <h1 class="titulo">Cadastro de usuários</h1>
+                <div class="cadastro">
+                    <form id="form_postagem" method="post" onsubmit="return publicar()">
+                        <div class="column-form">
+                            <div>
+                                <span>Nome:</span>
+                                <input id="nome_input">
+                            </div>
+
+                            <div>
+                                <span>Email:</span>
+                                <input id="email_input">
+                            </div>
+
+                            <div>
+                                <span>Senha:</span>
+                                <input id="senha_input">
+                            </div>
+                        </div>
+                </div>
+                <button class="btn_cadastro">Cadastrar</button>
+                </form>
+            </section>
+            <section class="second-div_container">
+                <div class="table-container" id="table_container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>Nome</td>
+                                <td>Modificar</td>
+                            </tr>
+                        </thead>
+                        <tbody id="feed_container">
+                            <!-- <tr>
+                                <td>1</td>
+                                <td>Gerson</td>
+                                <td>
+                                    <button class="btn-crud red">Deletar</button>
+                                    <button class="btn-crud green">Alterar</button>
+                                    <button class="btn-crud blue" onclick="mostrar_dados()">Informações</button>
+                                </td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+</body>
+
+</html>
+
+</html>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+<script>
+
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    var tipo_de_usuario = sessionStorage.TIPO_CLIENTE
+    console.log(tipo_de_usuario)
+
+    function limparFormulario() {
+        document.getElementById("form_postagem").reset();
+    }
+
+    function publicar() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        var corpo = {
+            nome: form_postagem.nome_input.value,
+            email: form_postagem.email_input.value,
+            senha: form_postagem.senha_input.value
+        }
+
+        if (tipo_de_usuario == "usuario") {
+
+
+
+            Swal.fire({
+                background: '#151515',
+                color: '#FFF',
+                icon: 'error',
+                title: 'Erro',
+                html: `Prezado usuário,
+
+Informamos que, de acordo com as políticas da Cocoa Technology, você não tem permissão para cadastrar funcionários em nosso sistema. Essa restrição garante a consistência dos dados e o cumprimento das responsabilidades atribuídas a membros específicos da equipe de recursos humanos.<br>
+
+Para cadastrar um novo funcionário, solicitamos que entre em contato com o departamento de recursos humanos da Cocoa Technology. Eles estão autorizados a realizar essa tarefa de forma adequada.<br>
+
+Agradecemos sua compreensão e cooperação quanto a essa política de acesso.
+
+Atenciosamente,
+Cocoa Technology`,
+            })
+            return false;
+        }
+        else {
+            fetch(`/avisos/publicar/${idUsuario}`, {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(corpo)
+            }).then(function (resposta) {
+
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        background: '#151515',
+                        color: '#FFF',
+                        showCancelButton: false,
+                        title: 'Bom trabalho!',
+                        text: 'Usuário Cadastrado com sucesso',
+
+                    })
+                    document.getElementById('okButton').addEventListener('click', function () {
+                        Swal.close()
+                        window.location.reload()
+                    });
+                    limparFormulario();
+
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                    window.location = "cadastrar-usuario.html"
+                    alert("ERRO")
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+
+            });
+
+            return false;
+
+        }
+    }
+
+    function mostrar_dados(idAviso) {
+
+        //aguardar();
+        fetch(`/avisos/mostrar_dados/${idAviso}`).then(function (resposta_dados_usuario) {
+
+            if (resposta_dados_usuario.ok) {
+                if (resposta_dados_usuario.status == 204) {
+                    alert("ERRO")
+                }
+
+                resposta_dados_usuario.json().then(function (resposta_dados_usuario) {
+                    console.log("Dados recebidos das plantações é : ", JSON.stringify(resposta_dados_usuario));
+
+
+                    for (let i = 0; i < resposta_dados_usuario.length; i++) {
+                        var dados = resposta_dados_usuario[i];
+                        console.log(dados)
+                        Swal.fire({
+                            background: '#151515',
+                            color: '#FFF',
+                            confirmButtonColor: 'cornflowerblue',
+                            title: 'Dados do Funcionário',
+                            html: `<div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                            <span><b>Nome</b>: ${dados.nome}</span>
+                            <span><b>Email</b>: ${dados.email}</span>
+                            <span><b>Responsável:</b> ${dados.responsavel}</span>
+                            <span><b>CNPJ:</b> ${dados.cnpj}</span>
+                            </div>`,
+                        })
+                    }
+                });
+            } else {
+                console.error('Houve um erro na API!', resposta_dados_usuario.status);
+
+            }
+        }).catch(function (erro) {
+            console.error(erro);
+
+        });
+    }
+
+    function editar(idAviso) {
+        sessionStorage.ID_POSTAGEM_EDITANDO = idAviso;
+        console.log("cliquei em editar - " + idAviso);
+        window.alert("Você será redirecionado à página de edição do aviso de id número: " + idAviso);
+        window.location = "/dashboard/edicao-aviso.html"
+
+    }
+
+    function deletar(idAviso) {
+        console.log("Criar função de apagar post escolhido - ID" + idAviso);
+
+
+
+        if (tipo_de_usuario == "usuario") {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                background: '#151515',
+                color: '#FFF',
+                html: `Prezado usuário,
+
+Gostaríamos de informar que, de acordo com as políticas da Cocoa Technology, você não possui permissão para deletar funcionários em nosso sistema. Essa restrição foi estabelecida visando à segurança e integridade dos dados, bem como para garantir que as decisões de término de contrato e outras ações relacionadas aos funcionários sejam tomadas de acordo com os procedimentos adequados.
+<br>
+Para solicitar a exclusão de um funcionário em nosso sistema, pedimos que entre em contato com o departamento de recursos humanos da Cocoa Technology. Eles possuem a autoridade e o conhecimento necessário para gerenciar essa ação de maneira apropriada.
+<br>
+Agradecemos pela sua compreensão e colaboração em relação a essa política de acesso. Estamos empenhados em proteger a segurança dos dados e em assegurar que todas as atividades sejam conduzidas em conformidade com as diretrizes estabelecidas.
+<br>
+Atenciosamente,
+Cocoa Technology`,
+            })
+            return false;
+        }
+        else {
+            Swal.fire({
+                title: 'Você tem certeza que deseja deletar?',
+                background: '#151515',
+                color: '#FFF',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: 'Deletar',
+                denyButtonText: `Não Deletar`,
+                confirmButtonColor: '#FF5555',
+                denyButtonColor: '#424242',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/avisos/deletar/${idAviso}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }).then(function (resposta) {
+                        if (resposta.ok) {
+                            Swal.fire('Saved!', '', 'success')
+                            Swal.fire({
+                                icon: 'success',
+                                background: '#151515',
+                                color: '#FFF',
+                                title: 'Bom trabalho!',
+                                text: 'Usuário deletado com sucesso',
+
+                            })
+                            document.getElementById('okButton').addEventListener('click', function () {
+                                Swal.close();
+                                location.reload();
+                            });
+                            window.location = "cadastrar-usuario.html";
+                        } else {
+                            Swal.fire('Falha ao deletar o usuário', '', 'error')
+                        }
+                    }).catch(function (resposta) {
+                        console.log(resposta);
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire({
+                        icon: 'warning',
+                        background: '#151515',
+                        color: '#FFF',
+                        title: 'Bom trabalho!',
+                        text: 'Usuário não deletado',
+                        confirmButtonColor: '#4CAF50'
+                    })
+
+                }
+            });
+        }
+    }
+
+    function atualizarFeed() {
+        var idUsuario = sessionStorage.ID_USUARIO;
+        //aguardar();
+        fetch(`/avisos/listar/${idUsuario}`).then(function (resposta) {
+            if (resposta.ok) {
+
+                if (resposta.status == 204) {
+                    var feed = document.getElementById("feed_container");
+                    var mensagem = document.createElement("span");
+                    mensagem.innerHTML = "Nenhum resultado encontrado."
+                    feed.appendChild(mensagem);
+                    throw "Nenhum resultado encontrado!!";
+                }
+
+                resposta.json().then(function (resposta) {
+                    console.log("Dados recebidos: ", JSON.stringify(resposta));
+
+                    var feed = document.getElementById("feed_container");
+                    feed.innerHTML = "";
+                    for (let i = 0; i < resposta.length; i++) {
+                        var publicacao = resposta[i];
+
+                        // criando e manipulando elementos do HTML via JavaScript
+                        var linha = document.createElement("tr");
+                        var tdId = document.createElement("td");
+                        var tdNome = document.createElement("td");
+                        var tdButtons = document.createElement("td");
+                        // var btnDeletar = document.createElement("button");
+                        // var btnAlterar = document.createElement("button");
+                        // var btnInformacao = document.createElement("button");
+
+
+                        tdId.innerHTML = publicacao.idusuario;
+                        var id_usuario = publicacao.idusuario
+                        console.log("O id é " + id_usuario)
+                        tdNome.innerHTML = publicacao.nome;
+                        tdButtons.innerHTML = `
+                            <button class="btn-crud red" id="btn_delete${i}" onclick="deletar(${publicacao.idusuario})">Deletar</button>
+                            <button class="btn-crud green" id="btn_update${i}" onclick="alterar(${publicacao.idusuario})">Alterar</button>
+                            <button class="btn-crud blue" id="btn_get${i}" onclick="mostrar_dados(${publicacao.idusuario})">Informações</button>
+                        `
+                        // btnDeletar.innerHTML = "Deletar";
+                        // btnAlterar.innerHTML = "Alterar";
+                        // btnInformacao.innerHTML = "Informações";
+
+                        // btnDeletar.innerHTML = "Deletar";
+                        // btnAlterar.innerHTML = "Alterar";
+                        // btnInformacao.innerHTML = "Informações";
+
+
+                        tdNome.className = "publicacao-nome";
+                        // btnAlterar.className = "btn-crud green"
+                        // btnInformacao.className = "btn-crud blue"
+                        // btnAlterar.id = "btnAlterar" + publicacao.idusuario;
+                        // btnAlterar.setAttribute("onclick", `editar(${publicacao.idusuario})`);
+                        // btnInformacao.setAttribute("onclick", `mostrar(${publicacao.idusuario})`);
+
+                        // btnDeletar.className = "btn-crud red"
+                        // btnDeletar.id = "btnDeletar" + publicacao.b_usuario;
+                        // btnDeletar.setAttribute("onclick", `deletar(${publicacao.idusuario})`);
+
+                        linha.appendChild(tdId);
+                        linha.appendChild(tdNome);
+                        linha.appendChild(tdButtons);
+                        // linha.appendChild(btnDeletar);
+                        // linha.appendChild(btnAlterar);
+                        // linha.appendChild(btnInformacao);
+                        feed.appendChild(linha);
+                    }
+
+
+                });
+            } else {
+                throw ('Houve um erro na API!');
+            }
+        }).catch(function (resposta) {
+            console.error(resposta);
+
+        });
+    }
+
+
+    function testar() {
+        aguardar();
+
+        var formulario = new URLSearchParams(new FormData(document.getElementById("form_postagem")));
+
+        var divResultado = document.getElementById("div_feed");
+
+        divResultado.appendChild(document.createTextNode(formulario.get("descricao")));
+        divResultado.innerHTML = formulario.get("descricao");
+
+
+
+        return false;
+    }
+
+
+
+
+
+    function alterar(idAviso) {
+
+        Swal.fire({
+            background: '#151515',
+            color: '#FFF',
+            title: '<span class="titulo">Editar Usuário</span>',
+            html: `
+          <div class="div_crud_alterar">
+            
+            <input type="text" id="input_nome" onkeyup="validar_nome()" placeholder="Nome de no minimo 3 caracteres" />
+          </div>
+          <div class="div_crud_alterar">
+            <input type="email" id="emailInput" onkeyup="validar_email()" placeholder="Insira um email válido" />
+          </div>
+          <div class="div_crud_alterar">
+            <input type="text" id="senhaInput" onkeyup="validar_senha()" placeholder="Senha de no mínimo 8 caracteres" />
+          </div>
+        `,
+            showCancelButton: true,
+            confirmButtonText: 'Alterar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#74C365',
+            cancelButtonColor: '#FF5555',
+            preConfirm: () => {
+                var nome = document.getElementById('input_nome').value;
+                var email = document.getElementById('emailInput').value;
+                var senha = document.getElementById('senhaInput').value;
+
+                alterarUsuario(idAviso);
+            }
+        });
+    }
+
+    function validar_nome() {
+        var input = document.getElementById('input_nome');
+        var nome = input.value;
+        if (nome == "") {
+
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Campo vazio';
+        }
+        else if (nome.length < 3) {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Nome muito curto';
+        }
+        else {
+            input.classList.add('correto');
+            input.placeholder = 'Nome';
+
+        }
+    }
+
+
+    function validar_email() {
+        var input = document.getElementById('emailInput');
+        var email = input.value;
+
+        if (email == '') {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Campo vazio';
+        }
+        else if (email.indexOf("@") == -1 || email.indexOf(".com") == -1 || email.length < 7) {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Email incorreto';
+        }
+        else {
+            input.classList.add('correto');
+            input.placeholder = 'Email';
+        }
+    }
+
+
+    function validar_senha() {
+        var input = document.getElementById('senhaInput');
+        var senha = input.value;
+
+
+        if (senha == "") {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Campo vazio';
+        }
+        else if (senha.length < 8) {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Senha menor que 8 caracteres';
+        }
+        else {
+            input.classList.add('correto');
+            input.placeholder = 'Senha';
+        }
+    }
+
+    function alterarUsuario(idAviso) {
+
+        var input_nome = document.getElementById('input_nome')
+        var input_email = document.getElementById('emailInput')
+        var input_senha = document.getElementById('senhaInput');
+
+        var nome = input_nome.value;
+        var email = input_email.value
+        var senha = input_senha.value
+
+
+        if (nome == "" || email == "" || senha == "") {
+
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Campo vazio';
+        }
+        else if (nome.length < 3 || email.indexOf("@") == -1 || email.indexOf(".com") == -1 || email.length < 7
+            || senha.length < 8) {
+            input.classList.remove('correto');
+            input.classList.add('erro');
+            input.placeholder = 'Nome muito curto';
+        }
+        else {
+            fetch(`/avisos/editar/${sessionStorage.getItem("ID_POSTAGEM_EDITANDO")}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nomeServer: nome,
+                    emailServer: email,
+                    senhaServer: senha,
+                    idSever: idAviso
+                })
+            }).then(function (resposta) {
+
+                if (resposta.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        background: '#151515',
+                        color: '#FFF',
+                        title: 'Bom trabalho!',
+                        text: 'Usuario Atualizado com sucesso',
+                        showConfirmButton: false,
+                    })
+                    document.getElementById('okButton').addEventListener('click', function () {
+                        Swal.close();
+                    });
+                    window.location = "cadastrar-usuario.html"
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        }
+    }
+
+</script>

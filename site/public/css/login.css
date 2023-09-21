@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;700;1000&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 7vh;
+  scroll-behavior: smooth;
+}
+
+.select-disable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  scrollbar-width: thin;
+  color: #FFF;
+  font-family: 'Mulish', sans-serif;
+  overflow-x: hidden;
+}
+
+@font-face {
+  font-family: 'Munale';
+  src: url(../assets/fonts/munale/Munale\ Loird.otf);
+  font-weight: normal;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.login-left {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background: radial-gradient(57.36% 57.36% at 50% 42.64%, #151515 0%, #0C0C0C 100%);
+  padding: 8vh;
+}
+
+.login-left img {
+  position: absolute;
+  width: 2vw;
+  top: 0;
+  left: 0;
+  margin: 1.5rem;
+}
+
+.login-left img:hover {
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.05);
+}
+
+.login-right {
+  display: flex;
+  width: 50%;
+  height: 100vh;
+  background-image: url('..//assets/img/login-image_.webp');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.login-left,
+.login-right {
+  min-height: 100vh;
+}
+
+.texto_login {
+  color: #FCF6C1;
+  font-family: 'Munale';
+  font-size: 29px;
+  text-align: center;
+  align-self: center;
+  font-weight: 400;
+  padding-bottom: 5vh;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 7vh;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 35vh;
+}
+
+.input-container div {
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+.input-container div p {
+  align-self: start;
+  color: #FCF6C1;
+  font-family: 'Muslih';
+  font-weight: 5;
+  font-size: 21px;
+}
+
+.form input {
+  padding: 5px;
+  width: 30vw;
+  border-radius: 6px;
+  border: 2px #361B08 solid;
+  font-size: 15px;
+  font-family: 'Mulish';
+  margin-bottom: 2vh;
+}
+
+.form input:hover {
+  border-radius: 15px;
+  transition: 0.5s;
+}
+
+.form input:focus {
+  outline: none;
+  border-bottom: 2px solid #DAA250;
+}
+
+.form span {
+  align-self: center;
+  text-align: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 100;
+  font-family: 'Mulish';
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5vh;
+}
+
+.btn-container a {
+  text-decoration: underline;
+  font-weight: 100;
+  color: #ffff;
+}
+
+.botao {
+  padding: 10px;
+  width: 150px;
+  border-radius: 32px;
+  border: none;
+  color: #361B08;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #FDFF87;
+  font-size: 15px;
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+.botao:hover {
+  -webkit-transform: scale(1.02);
+  -moz-transform: scale(1.02);
+  -o-transform: scale(1.02);
+  -ms-transform: scale(1.02);
+  transform: scale(1.02);
+  background-color: #FCF6C1;
+  box-shadow: 0px 0px 4px #FDFF87;
+}
+
+.conta a:hover {
+  color: #FCF6C1;
+}
+.shake {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(10px); }
+  50% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
