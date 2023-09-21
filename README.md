@@ -5,17 +5,17 @@ Site construido para a segunda sprint do primeiro semestre de 2023 da faculdade 
 
 👷🏻‍♂️🔨 Desenvolvido por:
 
-# Anna Paula | @annamatos 
+ Anna Paula | @annamatos 
 
-# Davi Maciel | @Davi-Britto
+ Davi Maciel | @Davi-Britto
 
-# Ewerton Lima | @EwertonLima2002
+ Ewerton Lima | @EwertonLima2002
 
-# Julia Hown | @JuliaHown
+ Julia Hown | @JuliaHown
 
-# Luigi Vicchietti | @luigiVicchietti
+ Luigi Vicchietti | @luigiVicchietti
 
-# Will Dantas | @dantaswilljpg
+ Will Dantas | @dantaswilljpg
 
 🛠 Ferramentas Utilizadas:
 
